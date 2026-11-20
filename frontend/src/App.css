@@ -1,0 +1,30 @@
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #eef1f5;
+}
+  .pagina {
+    max-width: 480px ;
+    margin: 40px auto;
+    padding: 24px;
+    background: white;
+    border-radius:12px;
+
+    
+}
+
+input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 10px;
+  margin-bottom: 16px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size:160x;
+}
+
+li {
+  padding : 8px;
+  border-bottom:1px solid #eee;
+  
+}
