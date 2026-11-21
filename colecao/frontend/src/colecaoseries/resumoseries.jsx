@@ -26,7 +26,7 @@ function Resumo({ dados, series = [] }) {
       <div className="resumo-card melhor-serie">
         <div className="melhor-topo">
           <span className="destaque-label">
-            ★ DESTAQUE
+             DESTAQUE
           </span>
 
           <span className="top-badge">

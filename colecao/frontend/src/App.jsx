@@ -50,17 +50,27 @@ function App() {
 
   return (
     <BrowserRouter>
+
       <header className="navbar">
         <NavLink to="/" className="logo">
           Nex<span>Vision</span>
         </NavLink>
 
-        <nav>
-          <NavLink to="/" end>Início</NavLink>
-          <NavLink to="/cadastrar">Cadastrar</NavLink>
-          <NavLink to="/series">Minha coleção</NavLink>
+        <nav className="menu-pill">
+          <NavLink to="/" end>
+            Início
+          </NavLink>
+
+          <NavLink to="/cadastrar">
+            Cadastrar
+          </NavLink>
+
+          <NavLink to="/series">
+            Minha coleção
+          </NavLink>
         </nav>
       </header>
+
 
       <main className="pagina">
         {erro && <p className="erro">{erro}</p>}
