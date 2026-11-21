@@ -1,79 +1,101 @@
+
 import { useEffect, useState } from "react";
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+  NavLink
+} from "react-router-dom";
+
+import Inicio from "./paginas/inicio";
+import Cadastro from "./paginas/Cadastro";
+import MinhaColecao from "./paginas/minhacolecao";
+
 import "./App.css";
 
-const API = "http://127.0.0.1:8000/api/alunos/";
+const API = "http://127.0.0.1:8000/api/series/";
 
 function App() {
-  const [alunos, setAlunos] = useState([]);
-  const [nome, setNome] = useState("");
-  const [turma, setTurma] = useState("");
-  const [nota, setNota] = useState("");
+  const [series, setSeries] = useState([]);
+  const [resumo, setResumo] = useState(null);
+  const [busca, setBusca] = useState("");
+  const [erro, setErro] = useState("");
 
-  function carregarAlunos() {
-    fetch(API)
-      .then((res) => res.json())
-      .then((dados) => setAlunos(dados));
+  async function carregarDados() {
+    try {
+      const [resSeries, resResumo] = await Promise.all([
+        fetch(API),
+        fetch(API + "resumo/")
+      ]);
+
+      if (!resSeries.ok || !resResumo.ok) {
+        throw new Error("Erro ao carregar dados");
+      }
+
+      setSeries(await resSeries.json());
+      setResumo(await resResumo.json());
+      setErro("");
+    } catch {
+      setErro("Não foi possível conectar ao Django.");
+    }
   }
 
   useEffect(() => {
-    carregarAlunos();
+    carregarDados();
   }, []);
 
-  function cadastrar(evento) {
-    evento.preventDefault();
-
-    fetch(API, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ nome, turma, nota: Number(nota) }),
-    }).then(() => {
-      setNome("");
-      setTurma("");
-      setNota("");
-      carregarAlunos();
-    });
-  }
+  const seriesFiltradas = series.filter((serie) =>
+    serie.titulo.toLowerCase().includes(busca.toLowerCase())
+  );
 
   return (
-    <div className="pagina">
-      <h1>Cadastro de alunos</h1>
+    <BrowserRouter>
+      <header className="navbar">
+        <NavLink to="/" className="logo">
+          Nex<span>Vision</span>
+        </NavLink>
 
-      <form onSubmit={cadastrar}>
-        <input
-          placeholder="Nome"
-          value={nome}
-          onChange={(e) => setNome(e.target.value)}
-          required
-        />
-        <input
-          placeholder="Turma (A, B...)"
-          maxLength={1}
-          value={turma}
-          onChange={(e) => setTurma(e.target.value)}
-          required
-        />
-        <input
-          placeholder="Nota"
-          type="number"
-          step="0.1"
-          min="0"
-          max="10"
-          value={nota}
-          onChange={(e) => setNota(e.target.value)}
-          required
-        />
-        <button type="submit">Cadastrar</button>
-      </form>
+        <nav>
+          <NavLink to="/" end>Início</NavLink>
+          <NavLink to="/cadastrar">Cadastrar</NavLink>
+          <NavLink to="/series">Minha coleção</NavLink>
+        </nav>
+      </header>
 
-      <h2>Alunos cadastrados</h2>
-      <ul>
-        {alunos.map((aluno) => (
-          <li key={aluno.id}>
-            {aluno.nome} · turma {aluno.turma} · nota {aluno.nota}
-          </li>
-        ))}
-      </ul>
-    </div>
+      <main className="pagina">
+        {erro && <p className="erro">{erro}</p>}
+
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <Inicio resumo={resumo} series={series} />
+            }
+          />
+
+          <Route
+            path="/cadastrar"
+            element={
+              <Cadastro
+                api={API}
+                aoCadastrar={carregarDados}
+              />
+            }
+          />
+
+          <Route
+            path="/series"
+            element={
+              <MinhaColecao
+                series={seriesFiltradas}
+                busca={busca}
+                setBusca={setBusca}
+              />
+            }
+          />
+        </Routes>
+      </main>
+    </BrowserRouter>
   );
 }
 
