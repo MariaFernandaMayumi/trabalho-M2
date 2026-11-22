@@ -10,5 +10,5 @@ Guilherme Aro de Matos - 11261102502
 
 pip install django django-cors-headers
 python manage.py migrate
-python manage.py creasuperuser
+python manage.py createsuperuser
 python manage.py runserver
