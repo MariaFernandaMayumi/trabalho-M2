@@ -1,4 +1,4 @@
-# coloquem o nome e RA de vocês
+# Integrantes do projeto.
 
 Renan Vinicius Dos Santos Almeida - 11261101119
 Maria Fernanda Mayumi Beltrami Kuzuhara - 11261104208
